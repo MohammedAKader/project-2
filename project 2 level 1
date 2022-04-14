@@ -1,0 +1,151 @@
+#include<stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <math.h>
+void system_initialization();
+bool Isequal(char str1[], char str2[]);
+int main() {
+	bool user1vote = false;
+	bool user2vote = false;
+	bool user3vote = false;
+	bool user4vote = false;
+
+	const unsigned long long user1 = 20201701052;
+	const unsigned long long user2 = 20201701022;
+	const unsigned long long user3 = 20211701047;
+	const unsigned long long user4 = 20231701052;
+
+	char pw[10];
+	char pw1[] = { "A" };
+	char pw2[] = { "B" };
+	char pw3[] = { "C" };
+	char pw4[] = { "D" };
+
+	unsigned long long username;
+
+	int numOfYes = 0;
+	int numOfNo = 0;
+	int numOfUsers = 4;
+	char vote[3];
+	int numOfVotes = 0;
+	while (!((numOfYes > numOfUsers / 2) || (numOfNo > numOfUsers / 2))) {
+		if (user1vote == true && user2vote == true && user3vote == true && user4vote == true) {
+			break;
+		}
+		system_initialization();
+		scanf("%llu", &username);
+		if (username == user1 || username == user2 || username == user3 || username == user4) {
+			printf("\nplease enter your password :");
+			scanf("%s", pw);
+			if ((Isequal(pw, pw1) && username == user1) || (Isequal(pw, pw2) && username == user2) || (Isequal(pw, pw3) && username == user3) || (Isequal(pw, pw4) && username == user4)) {
+				printf("\nyou have successfully entered the system");
+
+				if (username == user1 && user1vote == false || username == user2 && user2vote == false || username == user3 && user3vote == false || username == user4 && user4vote == false) {
+
+					printf("\nplease vote y/n\n");
+					scanf("%s", vote);
+
+					if (vote[0] == 'y' && vote[1] == '\0' || vote[0] == 'Y' && vote[1] == '\0') {
+
+						numOfYes++;
+						numOfVotes++;
+						printf("\nyour vote is %s", vote);
+						if (username == user1) {
+							user1vote = true;
+						}
+
+						else if (username == user2) {
+							user2vote = true;
+						}
+
+						else if (username == user3) {
+							user3vote = true;
+						}
+
+						else if (username == user4) {
+							user4vote = true;
+						}
+
+						//printf("numOfYes %d",numOfYes);
+					}
+					else if (vote[0] == 'n' && vote[1] == '\0' || vote[0] == 'N' && vote[1] == '\0') {
+						numOfNo++;
+						numOfVotes++;
+						printf("\nyour vote is %s", vote);
+						if (username == user1) {
+							user1vote = true;
+						}
+
+						else if (username == user2) {
+							user2vote = true;
+						}
+
+						else if (username == user3) {
+							user3vote = true;
+						}
+
+						else if (username == user4) {
+							user4vote = true;
+						}
+
+						//printf("numOfNo %d",numOfNo);
+					}
+					else {
+						printf("\ninvalid vote! Reconnect the system");
+
+					}
+
+
+				}
+				else {
+					printf("\nyou have already voted!");
+				}
+
+
+			}
+
+
+			else {
+
+				printf("\nwrong password! please reconnect the system");
+
+			}
+
+
+		}
+		else {
+			printf("you are not allowed to vote\n");
+
+		}
+	}
+	printf("\nvoting has been finished");
+	if (numOfYes > numOfNo) { //&& numOfYes>numOfUsers/2
+		printf("\nThe result is 'Yes'");
+	}
+	else if (numOfYes < numOfNo) { // && numOfNo>numOfUsers/2
+		printf("\nThe result is 'No'");
+	}
+	else {
+		printf("\nVoting ended with a tie");
+	}
+
+	return 0;
+}
+
+
+void system_initialization() {
+	printf("\n--------------------------");
+	printf("\nWelcome to voting system");
+	printf("\nplease enter your username :");
+
+}
+
+bool Isequal(char str1[], char str2[]) {
+	int result = strcmp(str1, str2);
+	if (result == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
