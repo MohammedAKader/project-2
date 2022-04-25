@@ -1,0 +1,426 @@
+#include<stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
+void system_initialization();
+bool Isequal(char str1[], char str2[]);
+void write (int a,int b,int c,int d,char pw1[20],char pw2[20],char pw3[20],char pw4[20]);
+int main(){
+    
+    bool user1vote = false; // when user votes it is true
+	bool user2vote = false;
+	bool user3vote = false;
+	bool user4vote = false;
+	const unsigned long long user1 = 20201701052; //constant usernames
+	const unsigned long long user2 = 20201701022;
+	const unsigned long long user3 = 20211701047;
+	const unsigned long long user4 = 20231701052;
+
+    int user1votestate=0; //0 haven't voted 1=yes -1=no 2=abstain 
+    int user2votestate=0;
+    int user3votestate=0;
+    int user4votestate=0;
+
+	char pw[10];
+	char operation[1];
+	char pw1[] = { "A1052" }; //inital passwords
+	char pw2[] = { "B1022" };
+	char pw3[] = { "C1047" };
+	char pw4[] = { "D1052" };
+	char new_password[20];  //entered password
+
+	unsigned long long username; //entered username
+	int writtenuserdata[4]; //data on the file
+    
+    int numOfAbstain=0; //counter of abstrain
+	int numOfYes = 0;   //counter of yes
+	int numOfNo = 0;    //counter of no
+	char vote[3];       //entered vote
+	int numOfVotes = 0; //counter of votes
+    
+    
+    FILE *fptr;
+    if ((fptr = fopen("untitled.txt", "r+")) == NULL) { //enter your file name and filepath here
+        printf("Error! File cannot be opened.");
+        
+        exit(1);  // Program exits if the file pointer returns NULL.
+    }
+
+    
+    for(int i=0;i<4;i++){ // reads text four times until newline is encountered
+       
+        fscanf(fptr, "%d[^\n]",&writtenuserdata[i]);
+        //printf("\n%d",writtenuserdata[i]);
+    }
+     fscanf(fptr,"%s[^\n]",pw1); //reads the passwords
+     
+     fscanf(fptr,"%s[^\n]",pw2);
+     
+     fscanf(fptr,"%s[^\n]",pw3);
+     
+     fscanf(fptr,"%s[^\n]",pw4);
+    
+    if(writtenuserdata[0]==1){ //user1vote yes 
+        numOfYes++;
+        user1vote = true;
+        user1votestate=1; 
+    }
+    else if(writtenuserdata[0]==-1){ //user1vote no
+        numOfNo++;
+        user1vote = true;
+        user1votestate=-1; 
+    }
+    else if(writtenuserdata[0]==2){ //user1vote abstain
+        numOfAbstain++;
+        user1vote = true;
+        user1votestate=2; 
+    }
+   if(writtenuserdata[1]==1){ //user2vote yes 
+        numOfYes++;
+        user2vote = true;
+        user2votestate=1; 
+    }
+    else if(writtenuserdata[1]==-1){ //user2vote no
+        numOfNo++;
+        user2vote = true;
+        user2votestate=-1; 
+    }
+    else if(writtenuserdata[1]==2){  //user2vote abstain
+        numOfAbstain++;
+        user2vote = true;
+        user2votestate=2; 
+    }
+    if(writtenuserdata[2]==1){ //user3vote yes
+        numOfYes++;
+        user3vote = true;
+        user3votestate=1; 
+    }
+    else if(writtenuserdata[2]==-1){ //user3vote no
+        numOfNo++;
+        user3vote = true;
+        user3votestate=-1; 
+    }
+    else if(writtenuserdata[2]==2){ //user3vote abstain
+        numOfAbstain++;
+        user3vote = true;
+        user3votestate=2; 
+    }
+   if(writtenuserdata[3]==1){ //user4vote yes
+        numOfYes++;
+        user4vote = true;
+        user4votestate=1; 
+    }
+    else if(writtenuserdata[3]==-1){ //user4vote no
+        numOfNo++;
+        user4vote = true;
+        user4votestate=-1; 
+    }
+    else if(writtenuserdata[3]==2){ //user4vote abstain
+        numOfAbstain++;
+        user4vote = true;
+        user4votestate=2; 
+    }
+    while (!((numOfYes==2 && numOfAbstain==1) || (numOfNo==2 && numOfAbstain==1) || (numOfYes==3) || (numOfNo==3))){ //when the result is obvious program determines the winner
+    if (user1vote == true && user2vote == true && user3vote == true && user4vote == true) { //when all users vote program determines the winner
+			break;
+		}
+    system_initialization();
+    //printf("num of yes %d\n num of no %d\n num of abstain %d\n",numOfYes,numOfNo,numOfAbstain);
+    scanf("%llu", &username);
+    if (username == user1 || username == user2 || username == user3 || username == user4){ //checks whether user is allowed to enter the system
+        printf("\nplease enter your password :");
+			scanf("%s", pw);
+			
+            if ((Isequal(pw, pw1) && username == user1) || (Isequal(pw, pw2) && username == user2) || (Isequal(pw, pw3) && username == user3) || (Isequal(pw, pw4) && username == user4)) { //checks whether password is correct
+                
+				printf("\nyou have successfully entered the system");
+                printf("\nchose an operation:");
+                printf("\n V for vote\n C for changing vote\n P for changing password\n");
+                
+                    scanf("%s", operation); //asks user to choose an operation
+                    if(operation[0]=='V'){
+                        
+                        
+                        if (username == user1 && user1vote == false || username == user2 && user2vote == false || username == user3 && user3vote == false || username == user4 && user4vote == false) { //checks users whether they already vote or not
+
+					printf("\nplease vote Y/N or A for abstain \n");
+					scanf("%s", vote); //gets the vote
+
+					if (vote[0] == 'y' && vote[1] == '\0' || vote[0] == 'Y' && vote[1] == '\0') { //if the vote is yes
+
+						numOfYes++;
+						numOfVotes++;
+						printf("\nyour vote is %s", vote);
+						if (username == user1) {
+							user1vote = true;
+							user1votestate=1;
+					
+						    
+						}
+
+						else if (username == user2) {
+							user2vote = true;
+						    user2votestate=1;
+						    
+						}
+
+						else if (username == user3) {
+							user3vote = true;
+						    user3votestate=1;
+						    
+						}
+
+						else if (username == user4) {
+							user4vote = true;
+						    user4votestate=1;
+						    
+						}
+
+						write(user1votestate,user2votestate,user3votestate,user4votestate,pw1,pw2,pw3,pw4); //write votestates and passwords to file
+					}
+					else if (vote[0] == 'n' && vote[1] == '\0' || vote[0] == 'N' && vote[1] == '\0') { //if the vote is no
+						numOfNo++;
+						numOfVotes++;
+						printf("\nyour vote is %s", vote);
+						if (username == user1) {
+							user1vote = true;
+							user1votestate=-1;
+						}
+
+						else if (username == user2) {
+							user2vote = true;
+							user2votestate=-1;
+						}
+
+						else if (username == user3) {
+							user3vote = true;
+							user3votestate=-1;
+						}
+
+						else if (username == user4) {
+							user4vote = true;
+							user4votestate=-1;
+						}
+
+						write(user1votestate,user2votestate,user3votestate,user4votestate,pw1,pw2,pw3,pw4); //write votestates and passwords to file
+					}
+					    else if(vote[0]=='A' && vote[1]=='\0' || vote[0]=='a' && vote[1]=='\0'){ //if the vote is abstain
+					        numOfVotes++;
+					        numOfAbstain++;
+						printf("\nyour vote is %s", vote);
+						if (username==user1){
+						    user1vote=true;
+						    user1votestate=2;
+						}
+						else if(username==user2){
+						    user2vote=true;
+						    user2votestate=2;
+						}
+					   	else if(username==user3){
+						    user3vote=true;
+						    user3votestate=2;
+						}
+					    	else if(username==user4){
+						    user4vote=true;
+						    user4votestate=2;
+						}
+					     write(user1votestate,user2votestate,user3votestate,user4votestate,pw1,pw2,pw3,pw4);   //write votestates and passwords to file
+					    }
+					else {
+						printf("\ninvalid vote! Reconnect the system");
+
+					}
+
+
+				}
+				else {
+					printf("\nyou have already voted!");
+				}
+                        
+                        
+                        
+                    }
+                else if(operation[0]=='P'){ //executes when user wants to change password
+                    printf("enter new password\n");
+                    scanf("%s",new_password); //gets the new password
+                  if(username==user1){
+                      strcpy(pw1,new_password ); 
+                  }  
+                  else if(username==user2){
+                      strcpy(pw2,new_password );
+                  }
+                  else if(username==user3){
+                      strcpy(pw3,new_password );
+                  }  
+                   else if(username==user4){
+                      strcpy(pw4,new_password );
+                  } 
+                write(user1votestate,user2votestate,user3votestate,user4votestate,pw1,pw2,pw3,pw4);//write votestates and passwords to file
+                    
+                }
+                else if(operation[0]=='C'){ //executes when user wants to change vote
+                    if(username==user1){
+                        if(user1votestate==0){
+                            printf("you havent voted yet!");
+                        }
+                        else if(user1votestate==1){
+                            printf("please relogin and vote");
+                            user1vote=false;
+                            numOfYes--;
+                            user1votestate=0;
+                            
+                            
+                        }
+                        else if(user1votestate==-1){
+                            printf("please relogin and vote");
+                            user1vote=false;
+                            numOfNo--;
+                            user1votestate=0;
+                        }
+                        else if(user1votestate==2){
+                            printf("please relogin and vote");
+                            user1vote=false;
+                            numOfAbstain--;
+                            user1votestate=0;
+                        }
+                        
+                    }
+                     else if(username==user2){
+                         if(user2votestate==0){
+                            printf("you havent voted yet!");
+                        }
+                        else if(user2votestate==1){
+                            printf("please relogin and vote");
+                            user2vote=false;
+                            numOfYes--;
+                            user2votestate=0;
+                        }
+                        else if(user2votestate==-1){
+                            printf("please relogin and vote");
+                            user2vote=false;
+                            numOfNo--;
+                            user2votestate=0;
+                        }
+                        else if(user2votestate==2){
+                            printf("please relogin and vote");
+                            user2vote=false;
+                            numOfAbstain--;
+                            user2votestate=0;
+                        }
+                     }          
+                    else if(username==user3){
+                        if(user3votestate==0){
+                            printf("you havent voted yet!");
+                        }
+                        else if(user3votestate==1){
+                            printf("please relogin and vote");
+                            user3vote=false;
+                            numOfYes--;
+                            user3votestate=0;
+                        }
+                        else if(user3votestate==-1){
+                            printf("please relogin and vote");
+                            user3vote=false;
+                            numOfNo--;
+                            user3votestate=0;
+                        }
+                        else if(user3votestate==2){
+                            printf("please relogin and vote");
+                            user3vote=false;
+                            numOfAbstain--;
+                            user3votestate=0;
+                        }
+                     }  
+                     else if(username==user4){
+                        if(user4votestate==0){
+                            printf("you havent voted yet!");
+                        }
+                        else if(user4votestate==1){
+                            printf("please relogin and vote");
+                            user4vote=false;
+                            numOfYes--;
+                            user4votestate=0;
+                        }
+                        else if(user4votestate==-1){
+                            printf("please relogin and vote");
+                            user4vote=false;
+                            numOfNo--;
+                            user4votestate=0;
+                        }
+                        else if(user4votestate==2){
+                            printf("please relogin and vote");
+                            user4vote=false;
+                            numOfAbstain--;
+                            user4votestate=0;
+                        }
+                     }  
+                }
+                else{
+                    printf("wrong operation");
+                }
+            }
+            else{
+            	printf("\nwrong password! please reconnect the system");
+                
+                
+            }
+    }
+    else{
+        printf("you are not allowed to vote\n");
+    }
+    
+    }
+    printf("-------------"); //when the result is obvious ths executes
+  printf("\nvoting has been finished");
+	if (numOfYes > numOfNo ) { 
+		printf("\nThe result is 'Yes'");
+	}
+	else if (numOfYes < numOfNo ) { 
+		printf("\nThe result is 'No'");
+	}
+	else if (numOfAbstain > numOfNo && numOfAbstain > numOfYes){
+	    printf("\nVoting ended with a tie");
+	}
+	else {
+		printf("\nVoting ended with a tie");
+	}  
+     printf("-------------");
+    
+    fclose(fptr); //closing the file
+    return 0;
+}
+
+void system_initialization() { //prints the necessary texts
+	printf("\n--------------------------");
+	printf("\nWelcome to voting system");
+	printf("\nplease enter your username :");
+	
+}
+
+bool Isequal(char str1[], char str2[]) { //compares two char strings, returns true if they are equal, returns false if they are not equal 
+	int result = strcmp(str1, str2);
+	if (result == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void write (int a,int b,int c,int d,char pw1[],char pw2[],char pw3[],char pw4[]) //writes the necessary data to file
+{
+  FILE *fptr= fopen ("untitled.txt", "r+");
+  if (fptr == NULL)
+    {
+      printf ("Error! File cannot be opened.");
+      // Program exits if the file pointer returns NULL.
+      exit (1);
+    }
+  else
+    {
+      fprintf (fptr, "%d\n%d\n%d\n%d\n%s\n%s\n%s\n%s", a,b,c,d,pw1,pw2,pw3,pw4);
+      
+    }
+
+   fclose(fptr);
+}
