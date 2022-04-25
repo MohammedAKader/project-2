@@ -1,0 +1,5 @@
+This project is aimed at creating a complete voting system that tallies up votes, counts and decides the winner.
+If the program quits before the vote ends, it is able to retrieve the last state of the vote when it restarts.
+First, the user enters the username. Then the user enters the password. If the username and password are correct,
+the user can login to the system. The user can vote in the system, change his/her vote or change his/her password.
+When the result of the voting is obvious, the voting ends, and the winner is determined.
